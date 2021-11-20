@@ -24,6 +24,7 @@ async function run() {
         // console.log('database connect successfully');
         const database = client.db("touristTravel");
         const serviceCollection = database.collection("services");
+        const bookingCollection = database.collection("bookings");
 
         //SERVICE DATA SHOW
         app.get('/services', async (req, res) => {
@@ -31,6 +32,20 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         })
+
+        //BOOKING COLLECTION
+        app.post('/bookings', async (req, res) => {
+            //ei comment diye dekha databackend e aise kina
+            // const appointment = req.body;
+            // console.log(appointment);
+            // res.json({message:'hello'})
+
+            const booking = req.body;
+            const result = await bookingCollection.insertOne(booking);
+            // console.log(result);
+            res.json(result)
+        })
+
 
 
     } finally {
