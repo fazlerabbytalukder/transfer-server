@@ -25,12 +25,12 @@ async function run() {
         const database = client.db("touristTravel");
         const serviceCollection = database.collection("services");
 
-        const doc = {
-            title: "sample data begaining",
-            content: "for check data",
-        }
-        const result = await serviceCollection.insertOne(doc);
-        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        //SERVICE DATA SHOW
+        app.get('/services', async (req, res) => {
+            const cursor = serviceCollection.find({});
+            const services = await cursor.toArray();
+            res.send(services);
+        })
 
 
     } finally {
