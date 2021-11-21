@@ -26,6 +26,7 @@ async function run() {
         const serviceCollection = database.collection("services");
         const bookingCollection = database.collection("bookings");
         const usersCollection = database.collection("users");
+        const reviewCollection = database.collection("reviews");
 
         //SERVICE DATA SHOW
         app.get('/services', async (req, res) => {
@@ -83,11 +84,25 @@ async function run() {
             const result = await bookingCollection.deleteOne(query);
             res.json(result);
         })
+        //POST REVIEW DATA
+        app.post('/reviews', async (req, res) => {
+            const reviews = req.body;
+            // console.log(reviews);
+            const result = await reviewCollection.insertOne(reviews);
+            // console.log(result);
+            res.json(result)
+        })
+        //REVIEW DATA SHOW
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        })
         //USER INFO POST TO THE DATABASE
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
-            console.log(result);
+            // console.log(result);
             res.json(result)
         })
         //USER PUT FOR GOOGLE SIGN IN METHOD(upsert)
