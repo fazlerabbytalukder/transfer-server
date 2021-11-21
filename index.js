@@ -56,6 +56,33 @@ async function run() {
             const bookings = await cursor.toArray();
             res.json(bookings);
         })
+        //ALL BOOKING SHOW
+        app.get('/allBookings', async (req, res) => {
+            const cursor = bookingCollection.find({});
+            const bookings = await cursor.toArray();
+            res.json(bookings);
+        });
+        //UPDATE BOOKING DATA
+        app.put('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upset: true };
+            const updateDoc = {
+                $set: {
+                    status: "Booked"
+                },
+            };
+            const result = await bookingCollection.updateOne(filter, updateDoc, options);
+            res.json(result)
+        })
+        //DELETE BOOKING DATA
+        app.delete('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id:ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+        })
         //USER INFO POST TO THE DATABASE
         app.post('/users', async (req, res) => {
             const user = req.body;
