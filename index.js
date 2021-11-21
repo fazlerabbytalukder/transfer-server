@@ -25,6 +25,7 @@ async function run() {
         const database = client.db("touristTravel");
         const serviceCollection = database.collection("services");
         const bookingCollection = database.collection("bookings");
+        const usersCollection = database.collection("users");
 
         //SERVICE DATA SHOW
         app.get('/services', async (req, res) => {
@@ -44,6 +45,32 @@ async function run() {
             const result = await bookingCollection.insertOne(booking);
             // console.log(result);
             res.json(result)
+        })
+        //GET BOOKING SPECIFIC USER DATA
+        app.get('/bookings', async (req, res) => {
+            const email = req.query.email;
+            const date = req.query.date;
+            // console.log(date);
+            const query = { email: email, date: date }
+            const cursor = bookingCollection.find(query);
+            const bookings = await cursor.toArray();
+            res.json(bookings);
+        })
+        //USER INFO POST TO THE DATABASE
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result)
+        })
+        //USER PUT FOR GOOGLE SIGN IN METHOD(upsert)
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
         })
 
 
